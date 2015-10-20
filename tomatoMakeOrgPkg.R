@@ -11,14 +11,10 @@ fGO <- merge(genes, go)[, c(2,3,4)]
 library(splitstackshape)
 uniprot = read.table("entrez2uniprot.tab", header = T)
 colnames(uniprot) = c("GID", "UNIPROT")
-fUniprot = cSplit(uniprot, "GID", ",", direction = "long")
-# to simplify the error case
-#fUniprot = cSplit(uniprot, "GID", ",", direction = "long")[c(1,2,3), ]
+fUniprot = as.data.frame.matrix(cSplit(uniprot, "GID", ",", direction = "long"))
 
 library(AnnotationForge)
-makeOrgPackage(gene_info = fSym, chromosome = fChr, go = fGO,
-# this does NOT work
-#makeOrgPackage(gene_info = fSym, chromosome = fChr, go = fGO, uniprot = fUniprot,               
+makeOrgPackage(gene_info = fSym, chromosome = fChr, go = fGO, uniprot = fUniprot,
                version = "0.1",
                maintainer = "Kozo Nishida <knishida@riken.jp>",
                author = "Kozo Nishida <knishida@riken.jp>",
