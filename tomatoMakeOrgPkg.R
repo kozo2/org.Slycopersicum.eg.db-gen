@@ -13,10 +13,20 @@ uniprot = read.table("entrez2uniprot.tab", header = T)
 colnames(uniprot) = c("GID", "UNIPROT")
 fUniprot = as.data.frame.matrix(cSplit(uniprot, "GID", ",", direction = "long"))
 
+ensemble = read.table("Solanum_lycopersicum.GCA_000188115.2.28.uniprot.tsv", header = T)
+fItag = merge(fUniprot, ensemble, by.x = "UNIPROT", by.y = "xref")
+fItag = unique(fItag[, c(2,4)])
+colnames(fItag) = c("GID", "ITAG")
+
+solgenomics = read.csv("tomato_unigenes_solyc_conversion_annotated.csv", header = F)
+solg = solgenomics[, c(1,2)]
+colnames(solg) = c("SGN", "ITAG")
+fSgn = merge(fItag, solg)[, c(2,3)]
+
 library(AnnotationForge)
-makeOrgPackage(gene_info = fSym, chromosome = fChr, go = fGO, uniprot = fUniprot,
+makeOrgPackage(gene_info = fSym, chromosome = fChr, go = fGO, uniprot = fUniprot, itag = fItag, sgn = fSgn,
                version = "0.1",
-               maintainer = "Kozo Nishida <knishida@riken.jp>",
+               maintainer = "Atsushi Fukushima <atsushi.fukushima@riken.jp>",
                author = "Kozo Nishida <knishida@riken.jp>",
                outputDir = ".",
                tax_id = "4081",
