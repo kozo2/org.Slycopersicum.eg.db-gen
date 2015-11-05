@@ -23,8 +23,19 @@ solg = solgenomics[, c(1,2)]
 colnames(solg) = c("SGN", "ITAG")
 fSgn = merge(fItag, solg)[, c(2,3)]
 
+lycocyc = read.csv("lycocyc.csv", header = F)
+trimmedItag = fItag
+library(stringi)
+trimmed = stri_sub(fItag$ITAG, 1, -3)
+trimmedItag$tITAG = trimmed
+itaggedLycocyc = merge(lycocyc, trimmedItag, by.x = "V4", by.y = "tITAG")
+
+colnames(itaggedLycocyc) = c("tITAG", "lycocyc", "ec", "enzyme", "GID", "ITAG")
+fEC = itaggedLycocyc[, c(5,3)]
+fEC = unique(fEC)
+
 library(AnnotationForge)
-makeOrgPackage(gene_info = fSym, chromosome = fChr, go = fGO, uniprot = fUniprot, itag = fItag, sgn = fSgn,
+makeOrgPackage(gene_info = fSym, chromosome = fChr, go = fGO, uniprot = fUniprot, itag = fItag, sgn = fSgn, ec = fEC,
                version = "0.1",
                maintainer = "Atsushi Fukushima <atsushi.fukushima@riken.jp>",
                author = "Kozo Nishida <knishida@riken.jp>",
