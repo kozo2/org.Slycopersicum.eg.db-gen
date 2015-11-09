@@ -34,8 +34,15 @@ colnames(itaggedLycocyc) = c("tITAG", "lycocyc", "ec", "enzyme", "GID", "ITAG")
 fEC = itaggedLycocyc[, c(5,3)]
 fEC = unique(fEC)
 
+fEnzyme = itaggedLycocyc[, c(5, 4)]
+fEnzyme = unique(fEnzyme)
+
+fLycocyc = itaggedLycocyc[, c(5, 2)]
+fLycocyc = unique(fLycocyc)
+
+library(GO.db)
 library(AnnotationForge)
-makeOrgPackage(gene_info = fSym, chromosome = fChr, go = fGO, uniprot = fUniprot, itag = fItag, sgn = fSgn, ec = fEC,
+makeOrgPackage(gene_info = fSym, chromosome = fChr, go = fGO, uniprot = fUniprot, itag = fItag, sgn = fSgn, ec = fEC, enzyme = fEnzyme, lycocyc = fLycocyc,
                version = "0.1",
                maintainer = "Atsushi Fukushima <atsushi.fukushima@riken.jp>",
                author = "Kozo Nishida <knishida@riken.jp>",
