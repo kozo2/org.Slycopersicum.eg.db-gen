@@ -10,27 +10,27 @@ fGO <- merge(genes, go)[, c(2,3,4)]
 
 library(splitstackshape)
 uniprot = read.table("entrez2uniprot.tab", header = T)
-colnames(uniprot) = c("GID", "UNIPROT")
+colnames(uniprot) = c("GID", "uniprot")
 fUniprot = as.data.frame.matrix(cSplit(uniprot, "GID", ",", direction = "long"))
 
 ensemble = read.table("Solanum_lycopersicum.GCA_000188115.2.28.uniprot.tsv", header = T)
-fItag = merge(fUniprot, ensemble, by.x = "UNIPROT", by.y = "xref")
+fItag = merge(fUniprot, ensemble, by.x = "uniprot", by.y = "xref")
 fItag = unique(fItag[, c(2,4)])
-colnames(fItag) = c("GID", "ITAG")
+colnames(fItag) = c("GID", "itag")
 
 solgenomics = read.csv("tomato_unigenes_solyc_conversion_annotated.csv", header = F)
 solg = solgenomics[, c(1,2)]
-colnames(solg) = c("SGN", "ITAG")
+colnames(solg) = c("sgn", "itag")
 fSgn = merge(fItag, solg)[, c(2,3)]
 
 lycocyc = read.csv("lycocyc.csv", header = F)
 trimmedItag = fItag
 library(stringi)
-trimmed = stri_sub(fItag$ITAG, 1, -3)
-trimmedItag$tITAG = trimmed
-itaggedLycocyc = merge(lycocyc, trimmedItag, by.x = "V4", by.y = "tITAG")
+trimmed = stri_sub(fItag$itag, 1, -3)
+trimmedItag$titag = trimmed
+itaggedLycocyc = merge(lycocyc, trimmedItag, by.x = "V4", by.y = "titag")
 
-colnames(itaggedLycocyc) = c("tITAG", "lycocyc", "ec", "enzyme", "GID", "ITAG")
+colnames(itaggedLycocyc) = c("titag", "pathway_name", "ec_number", "ec_name", "GID", "itag")
 fEC = itaggedLycocyc[, c(5,3)]
 fEC = unique(fEC)
 
